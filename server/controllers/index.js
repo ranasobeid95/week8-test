@@ -2,13 +2,16 @@ const express = require('express');
 
 const error = require('./error');
 const city = require('./city');
-const signup = require('./signup');
-const login = require('./login');
+const { renderSignup, postsignup } = require('./signup');
+const { renderLogin, postLogin } = require('./login');
+const { logout } = require('./logout');
+const { isLogin } = require('./auth');
 
 const router = express.Router();
-
-router.get('/login', login.renderLogin);
-router.get('/signup', signup.renderSignup);
+router.use(isLogin);
+router.route('/login').get(renderLogin).post(postLogin);
+router.get('/logout', logout)
+router.route('/signup').get(renderSignup).post(postsignup);
 router.get('/cities', city.renderCities);
 router.get('/all-cities', city.getAllCities);
 router.post('/add-city', city.add);
